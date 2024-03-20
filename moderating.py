@@ -135,9 +135,7 @@ async def is_immune(user : discord.Member):
 def get_member_log(member: discord.Member):
     with open("reports_log.json", 'r') as f:
         data = json.load(f)
-    user_data = data.get(str(member), {})
-    if user_data == {}:
-        return None
+    user_data = data.get(str(member))
     return user_data
 
 @client.command()
@@ -159,9 +157,6 @@ async def sendlog(ctx, member : discord.Member = None):
             await ctx.send("JSON File not found for some reason (this error should never happen. if it does, ping @ruasi immediately)")
             return
     else:
-        if get_member_log(member) is None:
-            await ctx.message.channel.send(f"Member {member} not found")
-            return
         with open('log_cache.txt', 'w') as f:
             json.dump(get_member_log(member), f, indent=4)
         with open('log_cache.txt', 'rb') as f:   
