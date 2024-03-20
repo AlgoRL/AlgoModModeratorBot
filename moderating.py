@@ -6,8 +6,8 @@ from discord import app_commands
 import json
 from report import Report
 
-load_dotenv('.env')
-token = os.environ.get("DISCORD_TOKEN")
+load_dotenv('../.env')
+token = os.environ.get("MODERATOR_DISCORD_TOKEN")
 if not token:
     print("Token is unreachable")
     exit()
