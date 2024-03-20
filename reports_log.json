@@ -1,15 +1,3 @@
 {
-    "Algo's AutoMod#0937": {
-        "warnings_today": 1,
-        "total_warning_count": 1,
-        "warnings": [
-            {
-                "case_id": 3447700952,
-                "content": "message content",
-                "severity": 2,
-                "reason": "testing",
-                "manual": true
-            }
-        ]
-    }
+
 }
