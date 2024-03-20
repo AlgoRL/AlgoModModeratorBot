@@ -159,15 +159,18 @@ async def sendlog(ctx, member : discord.Member = None):
             await ctx.send("JSON File not found for some reason (this error should never happen. if it does, ping @ruasi immediately)")
             return
     else:
-        if get_member_log(member) == None:
-            await ctx.message.channel.send(f"Member {member} not found")
+        try:
+            if get_member_log(member) == None:
+                await ctx.message.channel.send(f"Member {member} not found")
+                return
+            with open('log_cache.txt', 'w') as f:
+                json.dump(get_member_log(member), f, indent=4)
+            with open('log_cache.txt', 'rb') as f:   
+                log_file = discord.File(f, filename=f"{member}_log_file.json")
+            await ctx.send(file=log_file)
             return
-        with open('log_cache.txt', 'w') as f:
-            json.dump(get_member_log(member), f, indent=4)
-        with open('log_cache.txt', 'rb') as f:   
-            log_file = discord.File(f, filename=f"{member}_log_file.json")
-        await ctx.send(file=log_file)
-        return
+        except discord.DiscordException as e:
+            await ctx.message.channel.send(e)
 
 
 # semantics:
