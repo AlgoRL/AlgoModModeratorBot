@@ -16,7 +16,7 @@ intents.message_content = True
 intents.members = True
 client = commands.Bot(command_prefix="--", intents=intents)
 
-# small change for testing
+# small change for testing :3
 
 # on ready function
 @client.event
