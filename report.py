@@ -42,13 +42,14 @@ class Report:
             self.reason = "None"
         if self.content in [None, '', ' ']:
             self.content = "None"
+        date_str = self.date.isoformat()
         return {
             "case_id": self.case_id,
             "content": self.content,
             "severity": self.severity,
             "reason": self.reason,
             "manual": self.manual,
-            "date": self.date
+            "date": date_str
         }
 
     def log(self):
