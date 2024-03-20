@@ -131,7 +131,14 @@ async def is_immune(user : discord.Member):
 #         await interaction.channel.send()
         
 #     return
-    
+
+def get_member_log(member: discord.Member):
+    with open("reports_log.json", 'r') as f:
+        data = json.load(f)
+    user_data = data.get(str(member), {})
+    if user_data == {}:
+        return None
+    return user_data
 
 @client.command()
 async def sendlog(ctx, member : discord.Member = None):
@@ -152,7 +159,11 @@ async def sendlog(ctx, member : discord.Member = None):
             await ctx.send("JSON File not found for some reason (this error should never happen. if it does, ping @ruasi immediately)")
             return
     else:
-        await ctx.message.channel.send("ruasi: sorry i havent added that function yet. coming soon!")
+        with open('log_cache.txt', 'w') as f:
+            f.write(json.dump(get_member_log(member), indent=4))
+        with open('log_cache.txt', 'rb') as f:   
+            log_file = discord.File(f, filename=f"{member}_log_file.json")
+        await ctx.send(file=log_file)
         return
 
 
