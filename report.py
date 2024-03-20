@@ -1,7 +1,7 @@
 import discord
 import json
 import random
-from datetime import datetime
+from datetime import date
 
 '''
 [WARNING] - REQUIRES LOCAL FILE IN PATH "reports_log.json"
@@ -32,7 +32,7 @@ class Report:
         self.severity = severity
         self.reason = reason
         self.manual = manual
-        self.date = datetime.date.today()
+        self.date = date.today()
     
     def __str__(self):
         return f"User: {self.user}, Case ID: {self.case_id}, Content: {self.content}, Sev: {self.severity}, Reason: {self.reason}"
