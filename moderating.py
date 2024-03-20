@@ -16,6 +16,8 @@ intents.message_content = True
 intents.members = True
 client = commands.Bot(command_prefix="--", intents=intents)
 
+# small change for testing
+
 # on ready function
 @client.event
 async def on_ready():
