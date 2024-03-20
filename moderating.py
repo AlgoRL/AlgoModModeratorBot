@@ -199,7 +199,7 @@ async def warn(ctx, *args):
 @client.tree.command(name="warn")
 @app_commands.describe(user = "Mention the user you are warning", reason = "Reason for warning", severity = "Severity of infraction (1-5) : Default = 1", content = "Content of message being warned (optional)")
 async def set(interaction: discord.Interaction, user: discord.Member, reason: str = None, severity: int = 1, content: str = None):
-    member = interaction.guild.get_member(interaction.message.author.id)
+    member = interaction.guild.get_member(interaction.user.id)
     if not await has_perms(member):
         await interaction.response.send_message("You don't have permission to do that!", ephemeral=True)
         return
