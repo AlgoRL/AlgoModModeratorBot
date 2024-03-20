@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from discord.ext import commands
 from discord import app_commands
+from discord.ext.commands import MemberNotFound
 import json
 from report import Report
 
@@ -160,17 +161,18 @@ async def sendlog(ctx, member : discord.Member = None):
             return
     else:
         try:
-            if get_member_log(member) == None:
-                await ctx.message.channel.send(f"Member {member} not found")
-                return
-            with open('log_cache.txt', 'w') as f:
-                json.dump(get_member_log(member), f, indent=4)
-            with open('log_cache.txt', 'rb') as f:   
-                log_file = discord.File(f, filename=f"{member}_log_file.json")
-            await ctx.send(file=log_file)
-            return
-        except discord.DiscordException as e:
+            member_log = get_member_log(member)
+        except MemberNotFound as e:
             await ctx.message.channel.send(e)
+        if get_member_log(member) == None:
+            await ctx.message.channel.send(f"Member {member} not found")
+            return
+        with open('log_cache.txt', 'w') as f:
+            json.dump(get_member_log(member), f, indent=4)
+        with open('log_cache.txt', 'rb') as f:   
+            log_file = discord.File(f, filename=f"{member}_log_file.json")
+        await ctx.send(file=log_file)
+        return
 
 
 # semantics:
