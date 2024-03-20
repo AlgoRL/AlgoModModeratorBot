@@ -32,7 +32,7 @@ class Report:
         self.severity = severity
         self.reason = reason
         self.manual = manual
-        self.date = datetime.date()
+        self.date = datetime.date.today()
     
     def __str__(self):
         return f"User: {self.user}, Case ID: {self.case_id}, Content: {self.content}, Sev: {self.severity}, Reason: {self.reason}"
