@@ -19,6 +19,17 @@ def exists(user):
     with open("reports_log.json") as f:
         return str(user) in f
 
+def get_todays_warnings(user):
+    warnings = []
+    with open("reports_log.json") as f:
+        data = json.load(f)
+    if not data[user]['warnings']:
+        return f"Error: User {user} warnings not found in file."
+    for warning in data[user]['warnings']:
+        if warning['date'] == date.today():
+            warnings.append(warning)
+    return warnings
+
 class Report:
     # Member member.user        -> Member object            (required)
     # string message.content?   -> Content being reported   (optional) : None
@@ -72,8 +83,11 @@ class Report:
         
         # Append the new report to the user's warnings list
         user_data["warnings"].append(self.case_data())
-        user_data["warnings_today"] += 1
         user_data["total_warning_count"] += 1
+
+        user_warnings_today = get_todays_warnings(self.user)
+        user_data["warnings_today"] = len(user_warnings_today)
+
 
         # Update or add the user's data in the existing data
         existing_data[str(self.user)] = user_data
