@@ -160,7 +160,7 @@ async def sendlog(ctx, member : discord.Member = None):
             return
     else:
         with open('log_cache.txt', 'w') as f:
-            json.dump(f, get_member_log(member), indent=4)
+            json.dump(get_member_log(member), f, indent=4)
         with open('log_cache.txt', 'rb') as f:   
             log_file = discord.File(f, filename=f"{member}_log_file.json")
         await ctx.send(file=log_file)
