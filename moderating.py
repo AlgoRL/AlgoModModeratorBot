@@ -61,7 +61,10 @@ async def mod(message, response, ban=False, delete=True):
         print(f"Banning user: {message.author}\nMessage: {message.content}")
         await message.author.ban()
     else:
-        print(f"Warning user: {message.author}\nMessage: {message.content}")
+        member = message.guild.get_member(message.author.id)
+        if member:
+            print(f"Warning user: {message.author}\nMessage: {message.content}")
+            report(member, message.content, sev=1, manual=False)
     if delete:
         await message.delete()
 
