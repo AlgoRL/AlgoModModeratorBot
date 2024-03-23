@@ -233,14 +233,15 @@ async def on_message(message):
             return
         
         if any(word in message.content for word in banned_words):
-            await mod(message, "you cant say that idiot")
+            await mod(message, "you cant say that idiot", delete=True)
             return
         
         if message_has_invite(message):
             if message.channel.id == 814757332944814100:
                 return
-            await message.channel.send("You cannot send Discord server invites in this channel.")
-            await message.delete()
+            await mod(message, "You cannot send Discord server invites in this channel.", delete=True)
+            if message:
+                await message.delete()
             return
         
         
