@@ -93,8 +93,10 @@ class Report:
         user_data["total_warning_count"] += 1
 
         # Update warnings today count
-        user_warnings_today = get_todays_warnings(self.user)
-        user_data["warnings_today"] = len(user_warnings_today)
+        today_str = str(date.today())
+        user_warnings_today = sum(1 for warning in user_data['warnings'] if warning['date'] == today_str)
+
+        user_data["warnings_today"] = user_warnings_today
 
         # Update or add the user's data in the existing data
         existing_data[str(self.user)] = user_data
@@ -102,3 +104,4 @@ class Report:
         # Write the updated data back to the file
         with open("reports_log.json", 'w') as f:
             json.dump(existing_data, f, indent=4)
+
