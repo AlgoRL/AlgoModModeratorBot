@@ -70,7 +70,7 @@ class Report:
                 existing_data = json.load(f)
         except FileNotFoundError:
             existing_data = {}
-        
+
         # Check if the user already has data in the JSON
         user_data = existing_data.get(str(self.user), {})
         if user_data == {}:
@@ -78,16 +78,16 @@ class Report:
             user_data = {
                 "warnings_today": 0,
                 "total_warning_count": 0,
-                "warnings": []
+                "warnings": []  # Initialize warnings list
             }
-        
+
         # Append the new report to the user's warnings list
         user_data["warnings"].append(self.case_data())
         user_data["total_warning_count"] += 1
 
+        # Update warnings today count
         user_warnings_today = get_todays_warnings(self.user)
         user_data["warnings_today"] = len(user_warnings_today)
-
 
         # Update or add the user's data in the existing data
         existing_data[str(self.user)] = user_data
