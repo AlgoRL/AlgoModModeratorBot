@@ -19,24 +19,6 @@ def exists(user):
     with open("reports_log.json") as f:
         return str(user) in f
 
-def get_todays_warnings(user):
-    warnings = []
-    try:
-        with open("reports_log.json") as f:
-            data = json.load(f)
-    except FileNotFoundError:
-        return f"Error: reports_log.json not found."
-
-    user_data = data.get(str(user))
-    if user_data is None or 'warnings' not in user_data:
-        return f"Error: User {user} warnings not found in file."
-
-    for warning in user_data['warnings']:
-        if warning['date'] == str(date.today()):
-            warnings.append(warning)
-    return warnings
-
-
 class Report:
     # Member member.user        -> Member object            (required)
     # string message.content?   -> Content being reported   (optional) : None
