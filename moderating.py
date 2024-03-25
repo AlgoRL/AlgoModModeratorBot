@@ -194,8 +194,8 @@ async def on_message(message):
             if message:
                 await message.delete()
             return
-        else:
-            print("[Log] Could not find member in on_message event")
+    else:
+        print("[Log] Could not find member in on_message event")
     
 # Start bot
 client.run(token)
