@@ -181,7 +181,7 @@ async def on_message(message):
         print(f"Warnings today for {message.author}: {warnings_today(str(message.author))}")
         
         if any(word in message.content for word in banned_words):
-            if warnings_today(str(message.author.id)) >= 3:
+            if warnings_today(str(message.author)) >= 3:
                 await mod(message, "you cant say that idiot", kick=True, delete=True)
             else:
                 await mod(message, "You can't say that")
