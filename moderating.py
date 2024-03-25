@@ -178,7 +178,7 @@ async def on_message(message):
             print(f"[Log] You are immune! Member: {message.author}")
             return
         
-        print(f"Warnings today for {message.author}: {warnings_today(str(message.author.id))}")
+        print(f"Warnings today for {message.author}: {warnings_today(str(message.author))}")
         
         if any(word in message.content for word in banned_words):
             if warnings_today(str(message.author.id)) >= 3:
