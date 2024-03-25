@@ -184,9 +184,9 @@ async def on_message(message):
         
         if any(word in message.content for word in banned_words):
             if warnings_today(str(message.author)) >= 3:
-                await mod(message, "you cant say that idiot", kick=True, delete=True)
+                await mod(message, f"<@{message.author.id}> you cant say that idiot", kick=True, delete=True)
             else:
-                await mod(message, "You can't say that")
+                await mod(message, f"<@{message.author.id}> you can't say that")
             return
         
         if message_has_invite(message):
