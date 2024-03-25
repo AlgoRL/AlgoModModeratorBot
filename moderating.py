@@ -38,14 +38,14 @@ def message_has_invite(message):
 async def mod(message, response, ban=False, kick=False, delete=True, delete_response=False):
     sent_message = await message.channel.send(response)
     report(message.author, content=message.content, reason="Use of banned phrase.", manual=False)
+    if delete:
+        await message.delete()
     if ban:
         print(f"Banning user: {message.author}\nMessage: {message.content}")
         await message.author.ban()
     elif kick:
         print(f"Kicking user: {message.author}\nMessage: {message.content}")
         await message.author.kick()
-    if delete:
-        await message.delete()
 
     if delete_response:
         async def delete_message():
