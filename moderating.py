@@ -37,19 +37,30 @@ def message_has_invite(message):
 
 # Function to handle moderation actions
 async def mod(message, response, ban=False, kick=False, delete=True):
+    # Send the response
     sent_message = await message.channel.send(response)
+
+    # If ban is True, ban the user
     if ban:
         print(f"Banning user: {message.author}\nMessage: {message.content}")
         await message.author.ban()
+    # If kick is True, kick the user
     elif kick:
         print(f"Kicking user: {message.author}\nMessage: {message.content}")
         await message.author.kick()
-    async def delete_message():
+
+    # Schedule deletion of bot's message after 10 seconds
+    async def delete_bot_message():
         await asyncio.sleep(10)
         await sent_message.delete()
+
+    # Start the task to delete the bot's message
+    asyncio.create_task(delete_bot_message())
+
+    # Delete the original message
     if delete:
         await message.delete()
-    asyncio.create_task(delete_message())
+
 
 # Function to send warning report
 def report(user, content=None, sev=1, reason=None, manual=False):
