@@ -36,30 +36,23 @@ def message_has_invite(message):
     return "https://discord" in message.content
 
 # Function to handle moderation actions
-async def mod(message, response, ban=False, kick=False, delete=True):
-    # Send the response
+async def mod(message, response, ban=False, kick=False, delete=True, delete_response=False):
     sent_message = await message.channel.send(response)
-
-    # If ban is True, ban the user
+    report(message.author, content=message.content, reason="Use of banned phrase.", manual=False)
     if ban:
         print(f"Banning user: {message.author}\nMessage: {message.content}")
         await message.author.ban()
-    # If kick is True, kick the user
     elif kick:
         print(f"Kicking user: {message.author}\nMessage: {message.content}")
         await message.author.kick()
-
-    # Schedule deletion of bot's message after 10 seconds
-    async def delete_bot_message():
-        await asyncio.sleep(10)
-        await sent_message.delete()
-
-    # Start the task to delete the bot's message
-    asyncio.create_task(delete_bot_message())
-
-    # Delete the original message
     if delete:
         await message.delete()
+
+    if delete_response:
+        async def delete_message():
+            await asyncio.sleep(5)
+            await sent_message.delete()
+            asyncio.create_task(delete_message())
 
 
 # Function to send warning report
@@ -99,6 +92,21 @@ def get_member_log(member: discord.Member):
         print("Log file not found.")
         return None
 
+# Function to get the number of warnings issued to a user today
+def warnings_today(user_id: str) -> int:
+    try:
+        with open("reports_log.json", 'r') as f:
+            existing_data = json.load(f)
+    except FileNotFoundError:
+        existing_data = {}
+
+    user_data = existing_data.get(user_id, {})
+    if not user_data:
+        return 0
+    else:
+        today_str = str(date.today())
+        user_warnings_today = sum(1 for warning in user_data.get('warnings', []) if warning['date'] == today_str)
+        return user_warnings_today
 
 # Command to send log file
 @client.command()
@@ -152,5 +160,37 @@ async def warn(ctx, *args):
     await asyncio.sleep(5)
     await ctx.message.delete()
 
+# Check every message sent to the server
+@client.event
+async def on_message(message):
+    await client.process_commands(message)
+
+    if message.author == client.user:
+        return
+    # message = message to be checked (checks every message)
+    # don't moderate if message is a DM
+    if not message.guild:
+        return
+    member = message.guild.get_member(message.author.id)
+    if member:
+        # do not moderate messages from immune users (see `immune_roles`)
+        if await is_immune(member):
+            print(f"[Log] You are immune! Member: {message.author}")
+            return
+        
+        if any(word in message.content for word in banned_words):
+            if warnings_today(str(message.author.id)) >= 3:
+                await mod(message, "you cant say that idiot", kick=True, delete=True)
+            else:
+                await mod(message, "You can't say that")
+            return
+        
+        if message_has_invite(message):
+            if message.channel.id == 814757332944814100:
+                return
+            await mod(message, "You cannot send Discord server invites in this channel.", delete=True)
+            if message:
+                await message.delete()
+            return
 # Start bot
 client.run(token)
