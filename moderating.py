@@ -160,7 +160,6 @@ async def warn(ctx, *args):
         report(user=replied_author, content=replied_message.content, sev=sev, reason=reason, manual=True)
     else:
         await ctx.message.channel.send("You can only use --warn in a message reply to the target user. Try /warn")
-    await asyncio.sleep(5)
     await ctx.message.delete()
 
 # Check every message sent to the server
