@@ -180,7 +180,7 @@ async def on_message(message):
             print(f"[Log] You are immune! Member: {message.author}")
             return
         
-        print(f"Warnings today for {message.author}: {warnings_today(str(message.author))}")
+        print(f"Warnings today for {message.author}: {warnings_today(message.author)}")
         
         if any(word in message.content for word in banned_words):
             if warnings_today(str(message.author)) >= 3:
@@ -196,8 +196,6 @@ async def on_message(message):
             if message:
                 await message.delete()
             return
-    else:
-        print("[Log] Could not find member in on_message event")
     
 # Start bot
 client.run(token)
