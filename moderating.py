@@ -35,7 +35,6 @@ with open("banned_words.json", 'r') as f:
 def message_has_invite(message):
     return "https://discord" in message.content
 
-# Function to handle moderation actions
 async def mod(message, response, ban=False, kick=False, delete=True, delete_response=False):
     sent_message = await message.channel.send(response)
     report(message.author, content=message.content, reason="Use of banned phrase.", manual=False)
@@ -52,7 +51,10 @@ async def mod(message, response, ban=False, kick=False, delete=True, delete_resp
         async def delete_message():
             await asyncio.sleep(5)
             await sent_message.delete()
-            asyncio.create_task(delete_message())
+
+        # Create a task to delete the sent message
+        asyncio.create_task(delete_message())
+
 
 
 # Function to send warning report
