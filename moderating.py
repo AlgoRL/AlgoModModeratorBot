@@ -35,6 +35,9 @@ with open("banned_words.json", 'r') as f:
 def message_has_invite(message):
     return "https://discord" in message.content
 
+def message_has_steam_gift(message):
+    return ("steamcommunity.com/gift" or "50$") in message.content
+
 async def mod(message, response, ban=False, kick=False, delete=True, delete_response=False):
     sent_message = await message.channel.send(response)
     report(message.author, content=message.content, reason="Use of banned phrase.", manual=False)
@@ -180,19 +183,21 @@ async def on_message(message):
             print(f"[Log] You are immune! Member: {message.author}")
             return
         
-        print(f"Warnings today for {message.author}: {warnings_today(message.author)}")
+        if message_has_steam_gift(message=message):
+            await mod(message, "Compromised account!", ban=True, delete_response=True)
+            return
         
         if any(word in message.content for word in banned_words):
             if warnings_today(str(message.author)) >= 3:
                 await mod(message, f"<@{message.author.id}> you cant say that idiot", kick=True, delete=True)
             else:
-                await mod(message, f"<@{message.author.id}> you can't say that")
+                await mod(message, f"<@{message.author.id}> you can't say that", delete_response=True)
             return
         
         if message_has_invite(message):
             if message.channel.id == 814757332944814100:
                 return
-            await mod(message, "You cannot send Discord server invites in this channel.", delete=True)
+            await mod(message, "You cannot send Discord server invites in this channel.", delete=True, delete_response=True)
             if message:
                 await message.delete()
             return
